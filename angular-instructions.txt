@@ -1,0 +1,332 @@
+Projet Structure	
+	the file .spec.ts is the teste file
+WebPack pack manager to convert all file .js, .sass, .ts, .svg img and convert to .js .png .css that the broswser understand
+karma.config.js use to execute unit test
+portractor.conf.js integration test responsable
+tsling.js code validatior of sintaxe
+
+	E2E folder - is created to manage integration test
+	SCR folter - all the source folder
+		main.ts - file call when it the server. It'll load the default module
+		polyfills.ts - used to add extrernal libraries besides the ones from angular clic
+		style.css - global css file of the application
+	ASSETS folder - place to put all static files, like images, css(if necessary) or txt template files, etc
+	ENVIORMENTS folder - where is suitable to place app configuration.
+	
+Commands
+	ng test - run unit test(using the browser)
+	ng e2e - run integration test(it really open the browser an perform user simulation test using webbrowser selenium)
+	ng link - valid code quality based on the rule of the tslint.json file, code format
+	ng build --prod - generate a dist folder with the code ready to go to production 
+	
+create a new project: ng new app-name
+run a application: ng serve or npm run ng <command> if you don't have ng installed
+create a module: ng g module module-name *An module is a domain, that you can treated in a special way. 
+	Ex: ng g module calculadora/calculadora
+create a component: ng g c module-name/component-name *Is an unit of the domain inside of one module, created to have only one function.  
+	It has acess to the view, and does the comunication between view and the serivice(like a controller), take care of the navegation.
+	Ex: ng g component calculadora
+create a service: ng g c module-name/services/service-name *Is the place where the business logic is located. Is resposible to do business
+	logic, call api
+	Ex: ng g component calculadora/services/calculadora
+ng generate class User
+
+
+ng update <package> - analise your package .json to sugest update 
+ng add - a way to add new capabilities to your application Ex.: ng add @angular/material
+ng generate @angular/material:material-nav --name=my-nav generate a started template including a toolbar with an app-name and a side navigation
+ng generate @angular/material:material-dashboard --name=my-dashboard generate a dinamically rellease off cards
+ng generate @angular/material:material-table --name=my-table template to a datable pre configuration with a datasource for sorting and pagination
+
+To debug an application:
+	1) run ng test. This will open the Karma Debug renner from Jasmine
+	2) inspect the source code of the webpag, go to "Source" in your browser, and navigate into the file you want to debug
+		Ex: top/localhost:9876/_karma_webpack_/src/app/calculadora/services/calculadora.service.ts
+	3) place an breakpoint wherever you want
+
+When you create a sub-module, you always have to import the CommonModule inside de NgModule anotation, in declarations you can place de componentes
+that will be part of the module.
+
+ngOnInit(){} - used in case when you want to initialize some have stuff. This approach is better than initialize in the constructor, to leave the object
+	to be create as fast as possible and without error. So in ngOnInit is the best place to access the backend.
+
+Update angular 
+you cannot assigment variable at a template using typescript
+you cannot access global variables at a template using typescript, but is possible using the component
+
+Attibutes - define by html and they cannot change once they are initialized.
+Property - define by DOM. 
+
+Interpolation - operações feitas dentro {{}}. Ex.:id="{{myId}}" but do not work to some html property, 
+that's why whe use the [id]="myId"
+
+Property Binding - Ex.:[id]="myId", use to change all html property, incluse boolean, numbers.
+	[disable]="userForm.form.inalid" means that the porperty disable is applied to the element is the form is valid
+
+Class Binding - <h2 [class]="sucessClass">{{"Welcome " + name}}</h2>
+It's useful Dinamically add ou remove html class bease on properties at component class
+Apply css dinamically to one tag - [class]="sucessClass"
+Apply css dinamically to multiple tags - [ngClass]="messageClasses"
+
+Style Binding - apply inline styles to html elements
+<h2 [style.color]="'orange'">Style Binding</h2>
+
+Event Binding - data from template to class, responde by user events like click(eventy binding)
+
+Template Reference Variable - variable flow from de view to the class, ex.: an inpput field to perform some validation
+reference variable is created by the sintaxe #variableName
+
+Two way binding - allow us update a property and the same time display the value of this element
+Ex.: <input [(ngModel)]="name" type="text">{{name}} where name is a class property
+
+Structure Directives - directives that allows you to add or remove html elements
+ngIf
+	<div *ngIf="displayName; then thenBlock; else elseBlock"></div>
+    <ng-template #thenBlock>
+      <h2>Codevolution</h2>
+    </ng-template>
+    <ng-template #elseBlock>
+      <h2>Hidden</h2>
+    </ng-template>
+ngSwitch
+	<div [ngSwitch]="color">
+      <div *ngSwitchCase="'red'">You picked red color</div>
+      <div *ngSwitchCase="'blue'">You picked blue color</div>
+      <div *ngSwitchCase="'green'">You picked green color</div>
+      <div *ngSwitchDefault>Pick again</div>
+    </div>
+ngFor
+	<div *ngFor="let color of colors; index as i; first as f; last as l; odd as o">
+      <h2>{{i}} {{color}} {{f}} {{l}} {{o}}</h2>
+    </div>
+	
+Component Interation - cenario where the components need to interact with each other. Ex.: ParentComponent interacts with ChildComponent
+This is possible using @Input and @Output decorators
+Parent
+	<app-test [parentData] = "name"></app-test>
+Child
+	@Input('parentData') public namePass : string;
+
+Child to Parent - uses events
+	@Output() public childEvent = new EventEmitter();
+	(childEvent)="message=$event"
+	
+	
+Pipes - allows us transforme data before display then in the view
+      <h2>{{name | lowercase }}</h2>
+      <h2>{{name | uppercase | slice:3:5 }}</h2>
+      <h2>{{message | titlecase }}</h2>
+      <h2>{{person | json }}</h2>
+      <h2>{{5.678 | number:'4.1-2'}}</h2>
+      <h2>{{0.25 | percent}}</h2>
+      <h2>{{0.25 | currency:'BRL':'code'}}</h2>
+      <h2>{{date | date:'shortDate'}}</h2>
+
+	  
+Services - is a class with a specific purpose
+	Ex.: share data; implement application logic (calculate a logic); external interaction(connect to a database)
+	Is used by Dependency Injection - class receives its dependencies from external sources
+		constructor(engine, tires)
+	If a service is register in a component, all his clildreen can use it as well. Once registered at AppModulo, all componetes can use
+	
+
+Http and Observables
+	Observables - the type of responde from a http reponse, is a sequence of items that arrives asynchronously over time.
+	Http call - single item
+	Single item - HTTP response
+	So your Observable object needs to be converted into the suitable object(Car for example) 
+	The data that come from a service provides is passed only for the components that subscribe this server, but is also possible that this component
+	pass this data to another component
+	
+Fetch Data Using Http - 
+	getEmployees(): Observable<IEmployee[]>{              ->IEmployee interface that represents the return type of the url request
+		return this.http.get<IEmployee[]>(this._url);    
+	}
+
+	 this._employeeService.getEmployees()
+      .subscribe(data => this.employees = data);          ->data represents the return from the service as an Observable, that is assign asynchronous to the this.employees variable.
+	  
+
+
+Routing and Navagation
+	Configure the route is done at the app-routing.modules.ts, all possible routes are define at const routes, by set defining an object
+	const routes: Routes = [
+		  { path: 'departents', component: DepartmentListComponent},
+		  { path: 'employees', component: EmployeeListComponent}
+		];
+	
+	A good pratice, is to create an array of all routed components and export it as a constant coponents, this way you centralize where you need to place a routed component at your
+	application
+	
+	export const routingComponents = [DepartmentListComponent, EmployeeListComponent]
+	
+	Ex.: app.module.ts 
+		@NgModule({
+		  declarations: [
+			AppComponent,
+			EmployeeDetailComponent,
+			routingComponents
+		  ],
+	Important! Include the following tag at the end of the app.component.html <router-outlet></router-outlet>
+	
+	<a routerLink="/departments" routerLinkActive="">Departments</a> routerLinkActive especifies a class applied to the link after the click occurs
+	
+
+Wildcard Route and Redirecting Routes
+		import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+		this wildcard route should always be the last route at the constant configuration
+		
+
+Route Parameters
+	gotoDepartments(){
+    let selectId = this.departmentId ? this.departmentId : null;
+    this.router.navigate(['/departments', {id: selectId }]);
+  }
+  
+Relative Navigation - brings flexibily to the navigation changes at the project
+    this.router.navigate([department.id], {relativeTo: this.route});  first you pass the route parameter, and the refers to the current parameter at the second
+    this.router.navigate(['../',{id: selectId}], {relativeTo: this.route}); '../' especifies the path, go back one session of the url
+	
+Child Routes - some routes may only be viewed with in others routes. Ex.: you only will navigate to a extra information about some feature is you navigate first to view the feature
+	{ 
+		path: 'departments/:id', 
+		component:DepartmentDetailComponent,
+		children: [
+		  { path: 'overview', component: DepartmentOverviewComponent},
+		  { path: 'contact', component: DepartmentContactComponent}
+		]
+	},
+	
+	the router-outled object especifies where to display child routes
+
+
+
+
+Angular Forms!!!
+	Template Driven Forms(TDF) - Heavy on the component template	
+		Much of the code and the logic resides at the html template 
+		- unit testing is chanllenge
+		- suitable for simple scenarios
+		
+		template reference variable is used to access all the information about one form. Ex.: <form #userForm="ngForm">, with this angular will track every single item in the 
+		view that has the ngModel directive Ex.: <input type="text" class="form-control" ngModel>
+		
+		NgModelGroup - group a set of item into one object, like an address that has number, street, etc, you cant put all into the object Address <div ngModelGroup="address">
+		
+		Bind form data to a model - capter the input to a model than after can be sent to the server
+	Reactive Forms - Heavy on the component class
+	two way binding [(ngModel)]="userModel.subscribe", make possible to have model and view in sync
+	
+	
+Tracking state and validity - 
+	form field - has been visited ng-touched other wise ng-untouched
+	form field - value has been changed ng-dirty other wise ng-pristine
+	form field - value is valid ng-valid other wise ng-invalid is applied  (validation)
+	
+	Access to tracking state you need to bind the element by using #name="ngModel" at the element
+	this way, it is available as for example using name.dirty
+	
+	For validation, you need to work with form-control together with property binding 
+	Ex.:[class.is-invalid]="name.invalid && name.touched"
+		applies the invalid class to the field if form-control tell us that this field is invalid and touched
+		
+	OBS:[class.is-invalid]="phone.invalid && phone.untouched"
+				^							^
+				|							|
+	property we want to applie          condition to applie
+	
+	Field validation 
+	Ex.: <input type="tel" #phone="ngModel" pattern="^\d{10}$" required [class.is-invalid]="phone.invalid && phone.touched" class="form-control" name="phone" [(ngModel)]="userModel.phone">
+
+	Validation messages
+		<div *ngIf="phone.errors && (phone.invalid || phone.touched)">
+			<small class="text-danger" *ngIf="phone.errors.required">Phone number is required</small>
+			<small class="text-danger" *ngIf="phone.errors.pattern">Phone number must be 10 digits</small>
+		</div>
+		
+Form level validation
+	ngForm provides us an overall of all field validations, return true or false {{ userForm.form.valid }} where userForm is an instance of ngForm
+		This feature can be used in case you want to perform some user expirence, like able or enable a submit button
+		
+Submit form data	
+	In order to submit data to a metodo on a component you need to bind this to the form <form #userForm="ngForm" (ngSubmit)="onSubmit()" novalidate>
+	url to submit to a ws Ex.: _url = 'http://localhost:3000/enroll';
+	Service 
+		enroll(user: User){
+			return this._http.post<any>(this._url, user);
+		  }
+		  
+	Component
+		onSubmit(){
+			this.submitted = true;
+			console.log(this.userModel);
+			this._enrollmentService.enroll(this.userModel)
+				.subscribe(
+				  data=> console.log("Success!", data),
+				  error => console.log("Error!", error)
+				)
+		  }
+  
+Error Handling
+	At the serice =	catch the error at the service, throw the error to the component that has subscribe to the service.
+	At the component = assign the error status msg to a property 
+	At the htlm = bind the error status msg from the component to the html
+
+	
+Reactive Forms
+	most of the code and the logic resides in the component class
+	no two way binding, instead you need to react to user input to update the values
+	well suited to complex scenarios
+		* dinamic form fields - incresease quantity of forms by clicking at a +
+		* custom validation Ex.: password and password confirm validation
+		* dynamic validation Ex.: show a field based on a other field
+	Unit test - since the logic is at typescrit
+	
+	To work with Reactive Forms we need to have a Reactive Form Model
+	the building blocks of reactive forms are the classes:
+		*FormGroup - represents the form at the component class
+		*FormControl - represents the form fields at the component class
+	Steps to create a react form in Angular	
+		1) Define your html form in the component template
+		2) Define your form model in your component class	
+		3) Use the directives provided by the react form model to associate with the view
+	registrationForm.value can be sent to the server
+
+	Nesting Form Groups - set a set of related FormControl into a Form Group
+		used to break large forms into smaller and manageable ones
+		
+	Set Control Values without user control interaction
+		* Set some of the FromControls
+		this.registrationForm.patchValue({
+		  userName: 'Bruce',
+		  password: 'teste',
+		  confirmPassword: 'teste',
+		});
+		
+		* Set all of the FormGroups
+		this.registrationForm.setValue({
+		  userName: 'Bruce',
+		  password: 'teste',
+		  confirmPassword: 'teste',
+		  address: {
+			city: 'City',
+			state: 'State',
+			postalCode: '123456'
+		  }
+		});
+
+	FormBuilder Validation
+		<div *ngIf="userName.invalid && userName.touched">
+			<small *ngIf="userName.errors?.required" class="text-danger">Username is required</small>
+			<small *ngIf="userName.errors?.minlength" class="text-danger">Username must be at least 3 characters</small>
+		  </div>
+		  
+		  where userName is defined as get from the componet class
+		  get userName(){
+			return this.registrationForm.get('userName');
+		  }	
+		  
+	Cross Field Validation - validation considering two differents formcontrols to perform the validation Ex.:password and confirPassword, if they are equal
+
+Directives - an directive generate an html tag(an componente generate a html atribute - use form complex logic operation), directive is use 
+	to apply an specific operation into to a component
